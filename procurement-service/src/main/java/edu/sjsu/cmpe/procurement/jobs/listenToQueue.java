@@ -5,7 +5,7 @@ import javax.jms.JMSException;
 import edu.sjsu.cmpe.procurement.ProcurementService;
 import edu.sjsu.cmpe.procurement.annotations.Every;
 
-@Every("1mn")
+@Every("5mn")
 public class listenToQueue extends Job {
 	@Override
 	public void doJob() {

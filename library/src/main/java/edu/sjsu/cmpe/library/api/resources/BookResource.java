@@ -76,7 +76,7 @@ public class BookResource {
 		return Response.status(201).entity(bookResponse).build();
     }
     
-    @POST
+    /*@POST
     @Path("/test")
     @Timed(name = "create-Test-book")
     public Response createTestBook(@Valid InputFrom input) 
@@ -84,15 +84,16 @@ public class BookResource {
 		// Store the new book in the BookRepository so that we can retrieve it.
 		//Book savedBook = bookRepository.saveBook(request);
 	
-		/*String location = "/books/" + savedBook.getIsbn();
+		String location = "/books/" + savedBook.getIsbn();
 		BookDto bookResponse = new BookDto(savedBook);
 		bookResponse.addLink(new LinkDto("view-book", location, "GET"));
 		bookResponse
-		.addLink(new LinkDto("update-book-status", location, "PUT"));*/
+		.addLink(new LinkDto("update-book-status", location, "PUT"));
     	System.out.println("From Post " +input.getId());
     	input.print();	
 		return Response.status(200).build();
     }
+    */
     
     @GET
     @Path("/")

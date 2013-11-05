@@ -88,7 +88,7 @@ public class BookRepository implements BookRepositoryInterface {
 		}
 		bookMap.put(book.getIsbn(), book);
 		
-		book = new Book();
+		/*book = new Book();
 		book.setIsbn(3);
 		book.setCategory("comic");
 		book.setTitle("Iron Man");
@@ -119,7 +119,7 @@ public class BookRepository implements BookRepositoryInterface {
 		} catch (MalformedURLException e) {
 		    // eat the exception
 		}
-		bookMap.put(book.getIsbn(), book);
+		bookMap.put(book.getIsbn(), book);*/
 	
 		return bookMap;
     }

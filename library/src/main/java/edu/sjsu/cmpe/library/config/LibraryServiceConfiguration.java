@@ -19,7 +19,44 @@ public class LibraryServiceConfiguration extends Configuration {
     @JsonProperty
     private String stompTopicName;
     
-    /**
+    private String apolloUser;
+    private String apolloPassword;
+    private int apolloPort;
+    private String apolloHost;
+    
+    public String getApolloUser() {
+		return apolloUser;
+	}
+
+	public void setApolloUser(String apolloUser) {
+		this.apolloUser = apolloUser;
+	}
+
+	public String getApolloPassword() {
+		return apolloPassword;
+	}
+
+	public void setApolloPassword(String apolloPassword) {
+		this.apolloPassword = apolloPassword;
+	}
+
+	public int getApolloPort() {
+		return apolloPort;
+	}
+
+	public void setApolloPort(int apolloPort) {
+		this.apolloPort = apolloPort;
+	}
+
+	public String getApolloHost() {
+		return apolloHost;
+	}
+
+	public void setApolloHost(String apolloHost) {
+		this.apolloHost = apolloHost;
+	}
+
+	/**
      * @return the defaultName
      */
     public String getDefaultName() {

@@ -80,14 +80,11 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
         System.out.println("Waiting for messages from " + queue + "...");
         
         while(true) {
-         Message msg = consumer.receive(500);
+         Message msg = consumer.receive(5000);
          if(msg == null)
         	 break;
          if( msg instanceof TextMessage ) {
                 String body = ((TextMessage) msg).getText();
-                if( "SHUTDOWN".equals(body)) {                	
-                	continue;
-                }
                 System.out.println("Received Text message = " + body);
                 orderList.put(counter,body);
                 counter+=1;
@@ -95,9 +92,6 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
          } else if (msg instanceof StompJmsMessage) {
                 StompJmsMessage smsg = ((StompJmsMessage) msg);
                 String body = smsg.getFrame().contentAsString();
-                if ("SHUTDOWN".equals(body)) {                	
-                	continue;                
-                }
                 System.out.println("Received Stomp jms message = " + body);
 
          } else {
@@ -168,8 +162,7 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
 	         System.out.println("Sending : " + data);
 	         TextMessage msg = session.createTextMessage(data);
 	         
-	         producer.send(msg);
-	         producer.send(session.createTextMessage("SHUTDOWN"));
+	         producer.send(msg);	         
          }
          
          connection.close();

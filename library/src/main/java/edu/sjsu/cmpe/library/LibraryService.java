@@ -39,10 +39,10 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
     private static MessageProducer producer;
     private static String instanceName = "";
    
-    private static String user = env("APOLLO_USER", "admin");
-    private static String password = env("APOLLO_PASSWORD", "password");
-    private static String host = env("APOLLO_HOST", "54.215.210.214");
-    private static int port = Integer.parseInt(env("APOLLO_PORT", "61613"));
+    private static String user = "";
+    private static String password = "";
+    private static String host = "";
+    private static int port = 0;
     
     
     public static void main(String[] args) throws Exception {
@@ -104,7 +104,6 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
         System.out.println("**********************************************************************");   	        
         producer.send(msg);
         
-        producer.send(session.createTextMessage("SHUTDOWN"));
         connection.close();
     }
     
@@ -116,6 +115,10 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
 	String queueName = configuration.getStompQueueName();
 	String topicName = configuration.getStompTopicName();
 	instanceName = configuration.getDefaultName();
+	user = configuration.getApolloUser();
+	password = configuration.getApolloPassword();
+	host= configuration.getApolloHost();
+	port= configuration.getApolloPort();
 	
 	log.debug("Queue name is {}. Topic name is {}", queueName,
 		topicName);
@@ -153,7 +156,7 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
          System.out.println("Waiting for messages from " + destination + "...");
          
          while(true) {
-          Message msg = consumer.receive(500);
+          Message msg = consumer.receive();
           if(msg == null)
         	  continue;
           if( msg instanceof TextMessage ) {
@@ -161,18 +164,16 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
                  if( "SHUTDOWN".equals(body)) {
                   continue;
                  }
-                 BookRepository.UpdateBookDetails(body);
                  System.out.println("Received message = " + body);
-
+                 BookRepository.UpdateBookDetails(body);
           } else if (msg instanceof StompJmsMessage) {
                  StompJmsMessage smsg = ((StompJmsMessage) msg);
                  String body = smsg.getFrame().contentAsString();                 
                  if ("SHUTDOWN".equals(body)) {
                 	 continue;
                  }
-                 BookRepository.UpdateBookDetails(body);
                  System.out.println("Received message = " + body);
-
+                 BookRepository.UpdateBookDetails(body);
           } else {
                  System.out.println("Unexpected message type: "+ msg.getClass());
                  continue;
@@ -180,11 +181,11 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
          }
          //connection.close();
     }
-    private static String env(String key, String defaultValue) {
+  /*  private static String env(String key, String defaultValue) {
         String rc = System.getenv(key);
         if( rc== null ) {
          return defaultValue;
         }
         return rc;
-    }
+    }*/
 }
