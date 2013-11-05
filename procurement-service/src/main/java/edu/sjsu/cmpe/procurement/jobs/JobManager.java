@@ -30,8 +30,7 @@ public class JobManager implements Managed {
     
     @Override
     public void start() throws Exception {
-    	System.out.println("Pooja server jobmanager started");
-        scheduler = StdSchedulerFactory.getDefaultScheduler();
+    	scheduler = StdSchedulerFactory.getDefaultScheduler();
         scheduler.start();
         scheduleAllJobsWithEveryAnnotation();
         
@@ -39,8 +38,7 @@ public class JobManager implements Managed {
     
     @Override
     public void stop() throws Exception {
-    	System.out.println("Pooja server jobmanager stopped");
-        Thread.sleep(100);
+    	Thread.sleep(100);
         scheduler.shutdown(true);
     }
     
@@ -53,8 +51,7 @@ public class JobManager implements Managed {
 
    
     private void scheduleAllJobsWithEveryAnnotation() throws SchedulerException {
-    	System.out.println("Pooja job called");
-        List<Class<? extends Job>> everyJobClasses = getJobClasses(Every.class);
+    	List<Class<? extends Job>> everyJobClasses = getJobClasses(Every.class);
         log.info("Jobs with @Every annotation: " + everyJobClasses);
 
         for (Class<? extends org.quartz.Job> clazz : everyJobClasses) {
