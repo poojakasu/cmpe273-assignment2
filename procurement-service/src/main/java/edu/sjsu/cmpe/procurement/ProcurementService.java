@@ -40,10 +40,11 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
     private static Connection connection;
     private static MessageConsumer consumer;
     private static HashMap<Integer,String> orderList = new HashMap<Integer,String>();
-    private static String user = env("APOLLO_USER", "admin");
-    private static String password = env("APOLLO_PASSWORD", "password");
-    private static String host = env("APOLLO_HOST", "54.215.210.214");
-    private static int port = Integer.parseInt(env("APOLLO_PORT", "61613"));
+    private static String user = "";
+    private static String password = "";
+    private static String host = "";
+    private static int port = 0;
+    private static String queueName="";
     
     public static Client jerseyClient;     
     
@@ -61,52 +62,56 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
     
     public static void retrieveFromtheQueue() throws JMSException {    	
     	
-    	orderList = new HashMap<Integer,String>();
-    	String queue = "/queue/05829.book.orders";
+    	orderList = new HashMap<Integer,String>();    	
     	Integer counter =0;
     	try{
-    	StompJmsConnectionFactory factory = new StompJmsConnectionFactory();
-        factory.setBrokerURI("tcp://" + host + ":" + port);
-        connection = factory.createConnection(user, password);             
-        connection.start();
-        
-    	System.out.println("****************************************************");   	
-    	System.out.println("Connected to Apollo Broker :" + queue);   	
-    	
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        Destination dest = new StompJmsDestination(queue);
-
-        consumer = session.createConsumer(dest);
-        System.out.println("Waiting for messages from " + queue + "...");
-        
-        while(true) {
-         Message msg = consumer.receive(5000);
-         if(msg == null)
-        	 break;
-         if( msg instanceof TextMessage ) {
-                String body = ((TextMessage) msg).getText();
-                System.out.println("Received Text message = " + body);
-                orderList.put(counter,body);
-                counter+=1;
-
-         } else if (msg instanceof StompJmsMessage) {
-                StompJmsMessage smsg = ((StompJmsMessage) msg);
-                String body = smsg.getFrame().contentAsString();
-                System.out.println("Received Stomp jms message = " + body);
-
-         } else {
-                System.out.println("Unexpected message type: "+ msg.getClass());
-                break;
-         }
-        }
-        if(orderList.size() > 0)
-        	HttpConnectorPublisher.prepareDataPublish(orderList);
-        connection.close();
-        System.out.println("*********Closed Connection to Apollo Broker*********");
+    		StompJmsConnectionFactory factory = new StompJmsConnectionFactory();
+	        factory.setBrokerURI("tcp://" + ProcurementService.host + ":" + ProcurementService.port);
+	        	        
+	        connection = factory.createConnection(ProcurementService.user, ProcurementService.password);             
+	        connection.start();
+	        
+	    	System.out.println("****************************************************");   	
+	    	System.out.println("Connected to Apollo Broker :" + queueName);   	
+	    	
+	        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+	        Destination dest = new StompJmsDestination(queueName);
+	
+	        consumer = session.createConsumer(dest);
+	        System.out.println("Waiting for messages from " + queueName + "...");
+	        long wait = 500;
+	        while(true) {
+	         Message msg = consumer.receive(wait);
+	         if(msg == null)
+	         {
+	        	 System.out.println("Encountered NULL msg. Hence closing");
+	        	 break;
+	         }
+	         if( msg instanceof TextMessage ) {
+	                String body = ((TextMessage) msg).getText();
+	                System.out.println("Received Text message = " + body);
+	                orderList.put(counter,body);
+	                counter+=1;
+	
+	         } else if (msg instanceof StompJmsMessage) {
+	                StompJmsMessage smsg = ((StompJmsMessage) msg);
+	                String body = smsg.getFrame().contentAsString();
+	                System.out.println("Received Stomp jms message = " + body);
+	
+	         } else{
+	                System.out.println("Unexpected message type: "+ msg.getClass());
+	                break;
+	         }
+	        }
+	        if(orderList.size() > 0)
+	        	HttpConnectorPublisher.prepareDataPublish(orderList);
+	        connection.close();
+	        System.out.println("*********Closed Connection to Apollo Broker*********");
     	}
     	catch(Exception e){
     		connection.close();
-    		System.out.println("Exception in ProcurementService when Listening to Apollo Broker, Exception: "+e.getMessage());
+    		System.out.println("Exception in ProcurementService when Listening to Apollo Broker, Exception: ");
+    		e.printStackTrace();
     	}
         
     }
@@ -117,10 +122,15 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
     	
     	jerseyClient = new JerseyClientBuilder().using(configuration.getJerseyClientConfiguration()).using(environment).build();
     	
+    	user = env("APOLLO_USER", "admin");
+        password = env("APOLLO_PASSWORD", "password");
+        host = env("APOLLO_HOST", "54.215.210.214");
+        port = Integer.parseInt(env("APOLLO_PORT", "61613"));
+    	
     	 /** Root API */
      	environment.addResource(ProcurementResource.class);
      	
-        String queueName = configuration.getStompQueueName();
+        queueName = "/queue/05829.book.orders"; //configuration.getStompQueueName();
         String topicName = configuration.getStompTopicName();
         
         log.debug("Queue name is {}. Topic is {}", queueName, topicName);
