@@ -45,6 +45,7 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
     private static String host = "";
     private static int port = 0;
     private static String queueName="";
+    private static Session session=null;
     
     public static Client jerseyClient;     
     
@@ -74,7 +75,8 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
 	    	System.out.println("****************************************************");   	
 	    	System.out.println("Connected to Apollo Broker :" + queueName);   	
 	    	
-	        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+	    	session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+	        
 	        Destination dest = new StompJmsDestination(queueName);
 	
 	        consumer = session.createConsumer(dest);
@@ -105,7 +107,8 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
 	        }
 	        if(orderList.size() > 0)
 	        	HttpConnectorPublisher.prepareDataPublish(orderList);
-	        connection.close();
+	        session.close();
+	        connection.close();	        
 	        System.out.println("*********Closed Connection to Apollo Broker*********");
     	}
     	catch(Exception e){
