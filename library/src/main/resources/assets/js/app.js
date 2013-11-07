@@ -26,7 +26,7 @@ if(window.WebSocket) {
 							  		var arrtemp = temp.split(':');
 							  		$.ajax({
 									    type:"GET",
-									    url: "library/v1/books/"+arrtemp[0],
+									    url: "v1/books/"+arrtemp[0],
 									    async:false,
 									    error:function(){
 									    	var obj='{'+'\"isbn\":\"'+arrtemp[0]+'\",\"title\":\"'+arrtemp[1]+'\",\"category\":\"'+arrtemp[2]+'\",\"coverimage\":\"'+arrtemp[3]+':'+arrtemp[4]+'\"}';
@@ -41,7 +41,7 @@ if(window.WebSocket) {
 									    	}
 								    		$.ajax({
 							    			    type:"POST",
-							    			    url: "library/v1/books",
+							    			    url: "v1/books",
 							    			    contentType:'application/json',
 							    			    async:false,
 							    			    data:jsonobj,
@@ -60,7 +60,7 @@ if(window.WebSocket) {
 									    	$(tempButton).removeAttr("disabled");
 								    		$.ajax({
 							    			    type:"PUT",
-							    			    url: "library/v1/books/"+arrtemp[0]+"?status=available",
+							    			    url: "v1/books/"+arrtemp[0]+"?status=available",
 							    			    async:false							    			 
 							    			    });
 									    		
@@ -90,7 +90,7 @@ $(":button").click(function() {
     alert('About to report lost on ISBN ' + isbn);
     $.ajax({
 	    type:"PUT",
-	    url: "library/v1/books/"+isbn+"?status=lost",
+	    url: "v1/books/"+isbn+"?status=lost",
 	    async:false,
 	    complete: Load_View(isbn)
 	    });	 
@@ -102,7 +102,7 @@ function btn_clicked(obj)
 	 alert('About to report lost on ISBN ' + isbn);
 	 $.ajax({
 		    type:"PUT",
-		    url: "library/v1/books/"+isbn+"?status=lost",
+		    url: "v1/books/"+isbn+"?status=lost",
 		    async:false,
 		    complete: Load_View(isbn)
 		    });	 
