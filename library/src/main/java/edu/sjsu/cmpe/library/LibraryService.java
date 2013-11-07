@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yammer.dropwizard.Service;
+import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.views.ViewBundle;
@@ -48,7 +49,7 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
     public static void main(String[] args) throws Exception {
 	 
      new LibraryService().run(args);	
-	 int numThreads = 1;
+	/* int numThreads = 1;
 	 ExecutorService executor = Executors.newFixedThreadPool(numThreads);
 	  
 	 Runnable backgroundTask = new Runnable() {
@@ -65,7 +66,7 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
 	 };
 	  
 	 executor.execute(backgroundTask);
-	 executor.shutdown();
+	 executor.shutdown();*/
 		 
     }
     /* 
@@ -77,8 +78,9 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
     
     @Override
     public void initialize(Bootstrap<LibraryServiceConfiguration> bootstrap) {
-	bootstrap.setName("library-service");
+	bootstrap.setName("library-service");	
 	bootstrap.addBundle(new ViewBundle());
+	bootstrap.addBundle(new AssetsBundle());
     }
     
     public static void OrderForNewBook(Long lostisbn)throws JMSException{
@@ -111,26 +113,27 @@ public class LibraryService extends Service<LibraryServiceConfiguration> {
     public void run(LibraryServiceConfiguration configuration,
 	    Environment environment) throws Exception {
     
-	// This is how you pull the configurations from library_x_config.yml
-	String queueName = configuration.getStompQueueName();
-	String topicName = configuration.getStompTopicName();
-	instanceName = configuration.getDefaultName();
-	user = configuration.getApolloUser();
-	password = configuration.getApolloPassword();
-	host= configuration.getApolloHost();
-	port= configuration.getApolloPort();
-	
-	log.debug("Queue name is {}. Topic name is {}", queueName,
-		topicName);
+	           
+				String queueName = configuration.getStompQueueName();
+				String topicName = configuration.getStompTopicName();
+				instanceName = configuration.getDefaultName();
+				user = configuration.getApolloUser();
+				password = configuration.getApolloPassword();
+				host= configuration.getApolloHost();
+				port= configuration.getApolloPort();
+				
+			   log.debug("Queue name is {}. Topic name is {}", queueName,
+		          topicName);
     
-    /** Root API */
-	environment.addResource(RootResource.class);
-	/** Books APIs */
-	BookRepositoryInterface bookRepository = new BookRepository();
-	environment.addResource(new BookResource(bookRepository));
-
-	/** UI Resources */
-	environment.addResource(new HomeResource(bookRepository));
+                /** Root API */
+				environment.addResource(RootResource.class);
+				
+				/** Books APIs */
+				BookRepositoryInterface bookRepository = new BookRepository();
+				environment.addResource(new BookResource(bookRepository));
+			
+				/** UI Resources */
+				environment.addResource(new HomeResource(bookRepository,instanceName));
     }
     
     public static void ListenToApolloTopic() throws JMSException{

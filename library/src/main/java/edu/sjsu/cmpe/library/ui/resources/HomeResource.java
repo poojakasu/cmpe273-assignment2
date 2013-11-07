@@ -5,20 +5,25 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import edu.sjsu.cmpe.library.LibraryService;
 import edu.sjsu.cmpe.library.repository.BookRepositoryInterface;
 import edu.sjsu.cmpe.library.ui.views.HomeView;
 
 @Path("/")
 @Produces(MediaType.TEXT_HTML)
 public class HomeResource {
+	
     private final BookRepositoryInterface bookRepository;
-
-    public HomeResource(BookRepositoryInterface bookRepository) {
+    private final String libinstance;
+    
+    public HomeResource(BookRepositoryInterface bookRepository,String instances) {
 	this.bookRepository = bookRepository;
+	this.libinstance = instances;
     }
-
+    
     @GET
     public HomeView getHome() {
-	return new HomeView(bookRepository.getBookByISBN(1L));
+    	
+    	return new HomeView(bookRepository.getAllBooks(),libinstance);
     }
 }

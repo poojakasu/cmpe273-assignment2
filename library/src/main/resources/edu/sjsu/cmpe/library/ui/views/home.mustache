@@ -1,6 +1,52 @@
 <html>
-    <body>
-        <!-- calls getBook().getTitle() -->
-        <h1>The most popular book of the library is {{book.title}}!</h1>
-    </body>
+<head>
+	<title>Home</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	
+	<!--Latest compiled and minified CSS-->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" media="screen">
+	
+	<!--Optional theme-->
+	<linkrel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+	
+	</head>
+		<body>
+		<div id="connect" class="container">
+		<div class="jumbotron">
+		<!--calls getBooks()fromHomeResource-->  
+			<h2 id="libHeader">{{instance}}</h2>
+			<table class="table">
+			   <tr>
+					<td>ISBN</td>
+					<td>&nbsp;&nbsp;</td>
+					<td>Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td>Category</td>
+					<td>Status</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				</tr>
+			</table>
+			<table id="tblbook" class="table table-hover">
+			{{#books}}
+				<tr>
+					<td>{{isbn}}</td>
+					<td><img class="img-thumbnail" height="92" width="72" src="{{coverimage}}"></td>
+					<td>{{title}}</td>
+					<td>{{category}}</td>
+					<td><p id="{{isbn}}_status">{{status}}</p></td>
+					<td><button id="{{isbn}}" type="button" class="btn btn-primary">Report Lost</button></td>
+				</tr>
+			{{/books}}
+			</table>
+			<p id="message">Status:</p>
+		</div>
+		</div>
+	<!--script tags-->
+	<!--jQuery(necessary for Bootstrap's JavaScript plugins)-->
+	<script src="//code.jquery.com/jquery.js"></script>
+	<!--LatestcompiledandminifiedJavaScript-->
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	<script src="../assets/js/app.js"></script>
+	<script src="../assets/js/stomp.js"></script>
+	<script src="../assets/js/mustache.js"></script>
+	</body>
 </html>

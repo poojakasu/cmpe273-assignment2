@@ -141,14 +141,14 @@ public class BookRepository implements BookRepositoryInterface {
     @Override
     public Book saveBook(Book newBook) {
 	checkNotNull(newBook, "newBook instance must not be null");
-	// Generate new ISBN
-	Long isbn = generateISBNKey();
+	Long isbn;
+	if(newBook.getIsbn() != 0)
+		isbn = newBook.getIsbn();
+	else
+		isbn = generateISBNKey();
+	
 	newBook.setIsbn(isbn);
-	// TODO: create and associate other fields such as author
-
-	// Finally, save the new book into the map
 	bookInMemoryMap.putIfAbsent(isbn, newBook);
-
 	return newBook;
     }
 
@@ -159,12 +159,15 @@ public class BookRepository implements BookRepositoryInterface {
     public Book getBookByISBN(Long isbn) {
 	checkArgument(isbn > 0,
 		"ISBN was %s but expected greater than zero value", isbn);
-	return bookInMemoryMap.get(isbn);
+	if(bookInMemoryMap.containsKey(isbn))
+		return bookInMemoryMap.get(isbn);
+	else
+		return null;
     }
 
     @Override
     public List<Book> getAllBooks() {
-	return new ArrayList<Book>(bookInMemoryMap.values());
+    	return new ArrayList<Book>(bookInMemoryMap.values());
     }
 
     /*
