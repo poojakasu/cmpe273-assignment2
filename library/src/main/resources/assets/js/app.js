@@ -10,8 +10,8 @@ if(window.WebSocket) {
 		  var destination = "/topic/05829.book.computer";
 	  else
 		  var destination = "/topic/05829.book.*";
-	  var client = Stomp.client("ws://54.215.210.214:61623");
-	  
+	  var client = Stomp.client("ws://54.219.156.168:61623");
+
 	  client.debug = function(str) {
           $("#message").html("Status :"+ str);
         };

@@ -39,12 +39,12 @@ public class HttpConnectorPublisher{
 		String s = jacktojson.writeValueAsString(input);
 		
 		Client client =  Client.create();
-		WebResource webResource = client.resource("http://54.215.210.214:9000/orders");
+		WebResource webResource = client.resource("http://54.219.156.168:9000/orders");
 		ClientResponse response = webResource.type("application/json").post(ClientResponse.class, s);
 		
 		if (response.getStatus() != 200) {
 			throw new RuntimeException
-			("Couldnt Post the order to http://54.215.210.214:9000/orders" + response.getStatus());
+			("Couldnt Post the order to http://54.219.156.168:9000/orders" + response.getStatus());
 		}
 		else
 			System.out.println(response.toString());
@@ -59,8 +59,8 @@ public class HttpConnectorPublisher{
   
 	// HTTP GET request
 	private static List<Book> ReceiveGetFromPubliser() throws Exception {
- 
-		String url = "http://54.215.210.214:9000/orders/05829";
+
+		String url = "http://54.219.156.168:9000/orders/05829";
 		shipped_books book = null;
 		try{
 		Client client = Client.create();

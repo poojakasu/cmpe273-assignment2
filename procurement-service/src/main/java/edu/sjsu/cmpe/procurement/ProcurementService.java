@@ -127,7 +127,7 @@ public class ProcurementService extends Service<ProcurementServiceConfiguration>
     	
     	user = env("APOLLO_USER", "admin");
         password = env("APOLLO_PASSWORD", "password");
-        host = env("APOLLO_HOST", "54.215.210.214");
+        host = env("APOLLO_HOST", "54.219.156.168");
         port = Integer.parseInt(env("APOLLO_PORT", "61613"));
     	
     	 /** Root API */
